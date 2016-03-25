@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 02:35:38 2016
+# Last Modified : Sat Mar 26 03:45:50 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -61,7 +61,6 @@ class data01_crawler():
     def __init__(self):
         try:
             self.website_list = open('base')
-            self.output = open('output.csv','w+')
         except IOError:
             print "Please provide the p2p websites you want to crawled."
             del self
@@ -121,7 +120,7 @@ class data01_crawler():
                     try:
                         json_get = urllib.urlopen(self.base_url + self.kind_of_data_url[j] + self.website_url[i]+"&groupBy=day")
                         json_get = json.load(json_get)
-                        print json_get['data']
+                        #print json_get['data']
                         #json['data'] is a list(day) of list([time,data1,data2,......])
                         data_kind[self.kind_of_data[j]] = json_get['data']
                         data_p2p[self.p2p_name[i]] = data_kind
@@ -159,10 +158,14 @@ class data01_crawler():
     def data2csv(self):
         kind_data = []
         time_timestamp = []
-        self.output.write('时间,成交量（笔数）,成交额（万元）,利率指标（%）,平均借款期限（天）\
-                ,借款人数量（人/次）,人均借款额,投资人数量（人）,人均投资额（万元）,还款余额（万元）,待还金额（万元）\n')
         for i in range(len(self.data)): #all the p2p
-            print self.p2p_name[i]  #TODO:TEST
+            #print self.p2p_name[i]  #TODO:TEST
+            try:
+                self.output = open("./result/"+self.p2p_name[i]+'.csv','w+')
+            except IOError:
+                continue
+            self.output.write('时间,成交量（笔数）,成交额（万元）,利率指标（%）,平均借款期限（天）,借款人数量（人/次）,人均借款额,投资人数量（人）,人均投资额（万元）,还款余额（万元）,待还金额（万元）\n')
+        
             self.output.writelines([self.p2p_name[i],'\n'])
             #data[self.p2p_name[i]] now is a dict with key from kind of data and value of list[[day1][day2]] day1 = [time,data1,data2....]
 
@@ -186,7 +189,6 @@ class data01_crawler():
             data_p2p_all_kind = {}
             for j in range(len(self.kind_of_data)):
                 data_p2p_all_kind[self.kind_of_data[j]] = self.list2dic(self.data[self.p2p_name[i]][self.kind_of_data[j]])
-                print data_p2p_all_kind  #TODO:TEST
 
             #traverse all the data by time
             for j in range(len(time_timestamp)):
@@ -195,29 +197,26 @@ class data01_crawler():
                 #find every data with key in kind of data
                 for k in range(len(self.kind_of_data)):
                     try:
-                        #kind_data = self.data[self.p2p_name[i]][self.kind_of_data[k]][j]
-                        pass 
-                    except IndexError:
+                        kind_data = data_p2p_all_kind[self.kind_of_data[k]][(str)(time_timestamp[j])]
+                    except KeyError:
                         kind_data = []
-                        for l in range(self.num_of_kind_of_data[self.kind_of_data[k]]+ 1):  #compatible with those has data(first data is timestamp)
+                        for l in range(self.num_of_kind_of_data[self.kind_of_data[k]]):  #compatible with those has data(first data is timestamp)
                             kind_data.append('no_data_yet')
                     finally:
-                        for l in range(len(kind_data) - 1):   #the first data is timestamp
+                        for l in range(len(kind_data)):   #the first data is timestamp
                             self.output.write(',')
-                            self.output.write((str)(kind_data[l+1]))       
+                            self.output.write((str)(kind_data[l]))       
                 self.output.write('\n')
         self.output.close()
                     
 """
 TODO:
-    1.不能认为kind_data的所有数据的起始时间是相同的.......
+    1.不能认为kind_data的所有数据的起始时间是相同的.......   FIXED
     2.现在的逻辑默认时间是连续的
+    3.excel不支持csv直接分页.....
+    4.目前仍对网页列表有要求（必须为index-...）实际上只需要网站id即可
+    5.目前为得到整张数据表后再一次性写入，应加以修改
 """
-
-
-
-
-
 
 if __name__ == "__main__":
     my_data01 = data01_crawler()	
