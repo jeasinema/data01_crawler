@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 14:34:01 2016
+# Last Modified : Sat Mar 26 15:10:23 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -166,11 +166,22 @@ class data01_crawler():
         data_p2p_name = args[1]
         kind_data = []
         time_timestamp = []
+        """
+        judge if it has the first 2 data_kind
+        """
+        data_is_good = 0
+        if data_p2p[self.kind_of_data[0]] and data_p2p[self.kind_of_data[1]]:
+            data_is_good = 1
+        else:
+            data_is_good = 0
+            
         #for i in range(len(self.data)): #all the p2p
             #print self.p2p_name[i]  #TODO:TEST
         try:
-            self.output = open("./result/"+(str)(data_p2p_name)[:-1]+'.csv','w+')
-        
+            if data_is_good:
+                self.output = open("./result/"+(str)(data_p2p_name)[:-1]+'.csv','w+')
+            else:
+                self.output = open("./result_not_good/"+(str)(data_p2p_name)[:-1]+'.csv','w+')
             self.output.write('时间,成交量（笔数）,成交额（万元）,利率指标（%）,平均借款期限（天）,借款人数量（人/次）,人均借款额,投资人数量（人）,人均投资额（万元）,还款余额（万元）,待还金额（万元）\n')
         
             self.output.writelines([(str)(data_p2p_name),'\n'])
@@ -224,7 +235,7 @@ TODO:
     2.现在的逻辑默认时间是连续的
     3.excel不支持csv直接分页.....
     4.目前仍对网页列表有要求（必须为index-...）实际上只需要网站id即可
-    5.目前为得到整张数据表后再一次性写入，应加以修改
+    5.目前为得到整张数据表后再一次性写入，应加以修改 FIXED
 """
 
 
@@ -250,10 +261,10 @@ class p2p_list():
                 #print page      #TODO:TEST
                 for j in re.finditer(r'(<a\sstyle="color:\sblack;"\shref="\/p2p\/website\/)(.+)(">)(.+)(</a>)',page): 
                     self.output.write(j.group(4))
-#                    print j.group(4)  #TODO:TEST
+                    print j.group(4)  #TODO:TEST
                     self.output.write('   ')
                     single_url = re.sub(r'platform-details','http://data.01caijing.com/p2p/website/index',j.group(2))
-#                    print single_url  #TODO:TEST
+                    print single_url  #TODO:TEST
                     self.output.write(single_url + '\n')
             else:
                 pass
