@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 03:45:50 2016
+# Last Modified : Sat Mar 26 11:03:09 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -123,13 +123,15 @@ class data01_crawler():
                         #print json_get['data']
                         #json['data'] is a list(day) of list([time,data1,data2,......])
                         data_kind[self.kind_of_data[j]] = json_get['data']
-                        data_p2p[self.p2p_name[i]] = data_kind
+                        #data_p2p[self.p2p_name[i]] = data_kind  BUGS
                     except IOError:
                         data_kind[kind_of_data[j]] = []
-                        data_p2p[self.p2p_name[i]] = {}
+                        #data_p2p[self.p2p_name[i]] = {}  BUGS
+                data_p2p[self.p2p_name[i]] = data_kind
             else:
                 data_p2p[self.p2p_name[i]] = {}
-        self.data = data_p2p
+            self.data2csv(data_p2p[self.p2p_name[i]], self.p2p_name[i])
+        #self.data = data_p2p
 
     def time2day(self, *args, **kwargs):
         """
@@ -155,32 +157,37 @@ class data01_crawler():
         return dic
 
     
-    def data2csv(self):
+    def data2csv(self, *args, **kwargs):
+        """
+        args(0) = data_p2p(single)
+        args(1) = p2p_name(single)
+        """
+        data_p2p = args[0] 
+        data_p2p_name = args[1]
         kind_data = []
         time_timestamp = []
-        for i in range(len(self.data)): #all the p2p
+        #for i in range(len(self.data)): #all the p2p
             #print self.p2p_name[i]  #TODO:TEST
-            try:
-                self.output = open("./result/"+self.p2p_name[i]+'.csv','w+')
-            except IOError:
-                continue
+        try:
+            self.output = open("./result/"+(str)(data_p2p_name)[:-1]+'.csv','w+')
+        
             self.output.write('时间,成交量（笔数）,成交额（万元）,利率指标（%）,平均借款期限（天）,借款人数量（人/次）,人均借款额,投资人数量（人）,人均投资额（万元）,还款余额（万元）,待还金额（万元）\n')
         
-            self.output.writelines([self.p2p_name[i],'\n'])
+            self.output.writelines([(str)(data_p2p_name),'\n'])
             #data[self.p2p_name[i]] now is a dict with key from kind of data and value of list[[day1][day2]] day1 = [time,data1,data2....]
 
             #first step: find all the time from data[p2pname][kindofdata], print it(time is the biggest)
             time_length = 0
             time_length_max = 0
             for j in range(len(self.kind_of_data)):
-                if self.data[self.p2p_name[i]][self.kind_of_data[j]] != []:
-                    time_length = len(self.data[self.p2p_name[i]][self.kind_of_data[j]])
+                if data_p2p[self.kind_of_data[j]] != []:
+                    time_length = len(data_p2p[self.kind_of_data[j]])
                     #print time_length   #TODO:TEST
                     #get all the timestamp
                     if time_length > time_length_max:
                         time_timestamp = []
                         for k in range(time_length):
-                            time_timestamp.append(self.data[self.p2p_name[i]][self.kind_of_data[j]][k][0])
+                            time_timestamp.append(data_p2p[self.kind_of_data[j]][k][0])
                         #print time_timestamp   #TODO:TEST
                         time_length_max = time_length
                         
@@ -188,7 +195,7 @@ class data01_crawler():
             #transform the data_p2p from dic of list to dic to dic
             data_p2p_all_kind = {}
             for j in range(len(self.kind_of_data)):
-                data_p2p_all_kind[self.kind_of_data[j]] = self.list2dic(self.data[self.p2p_name[i]][self.kind_of_data[j]])
+                data_p2p_all_kind[self.kind_of_data[j]] = self.list2dic(data_p2p[self.kind_of_data[j]])
 
             #traverse all the data by time
             for j in range(len(time_timestamp)):
@@ -207,8 +214,10 @@ class data01_crawler():
                             self.output.write(',')
                             self.output.write((str)(kind_data[l]))       
                 self.output.write('\n')
-        self.output.close()
-                    
+            self.output.close()
+        except IOError:
+            print (str)(data_p2p_name)+"data saving failure"
+                
 """
 TODO:
     1.不能认为kind_data的所有数据的起始时间是相同的.......   FIXED
@@ -221,7 +230,7 @@ TODO:
 if __name__ == "__main__":
     my_data01 = data01_crawler()	
     my_data01.read_website_list()
+    print "There will be %d website to crawl"%len(my_data01.p2p_name)
     print "start crawling"
     my_data01.get_data_p2p()
     #print my_data01.data  #TODO:TEST
-    my_data01.data2csv()
