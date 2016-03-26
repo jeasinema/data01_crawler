@@ -23,6 +23,27 @@
 ##各信贷站的url：
 index里面能获得信贷站的主页域名，添加至post_usl里面即可
 
+##自动爬取所有的信贷站：
+	
+	function setpage(page){
+		$("#p").val(page);
+		$("#check_page").val(page);
+		search_function()
+	}
+
+	// 表单查询
+	function search_function(){
+		$("#search_form").submit();
+	}
+	
+	<form class="search_form" id="search_form" action="/p2p/index.html" method="post">
+	<a href="javascript:setpage(41)">»</a>
+
+1.	在http://data.01caijing.com/p2p/index.html上对这两个表单赋值
+2.	post这个表单,{"p":new_page,"check_page":newe_page}
+3.	返回的response即为新的页面
+4.	总页数可以在首页获得
+
 ##脚本使用方法（Windows下）：
 	
 	MKDIR result

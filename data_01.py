@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 11:03:09 2016
+# Last Modified : Sat Mar 26 14:30:30 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -57,7 +57,7 @@ class data01_crawler():
     data为各借贷站的data，数据分层依次为dic(key=p2p_name)-dic(key=data_kind)-list(time,data)
     """
     data={}
-    
+     
     def __init__(self):
         try:
             self.website_list = open('base')
@@ -227,10 +227,55 @@ TODO:
     5.目前为得到整张数据表后再一次性写入，应加以修改
 """
 
+
+class p2p_list():
+    
+    base_url = "http://data.01caijing.com/p2p/index.html" 
+    """
+    this magic_num is the page amount, now is 41
+    """
+    page_amount = 2
+    def __init__(self):
+        try:
+            self.output = open('./base_list','w+')
+        except IOError:
+            print "cannot open the p2p_list output files."
+            del self
+            quit()
+
+    def get_p2p_list(self):
+        for i in self.interator_get_p2p():
+            if i:
+                page = i.read()
+                #print page      #TODO:TEST
+                for j in re.finditer(r'(<a\sstyle="color:\sblack;"\shref="\/p2p\/website\/)(.+)(">)(.+)(</a>)',page): 
+                    self.output.write(j.group(4))
+                    print j.group(4)  #TODO:TEST
+                    self.output.write('   ')
+                    single_url = re.sub(r'platform-details','http://data.01caijing.com/p2p/website/index',j.group(2))
+                    print single_url  #TODO:TEST
+                    self.output.write(single_url + '\n')
+            else:
+                pass
+
+    def interator_get_p2p(self, *args, **kwargs):
+        for j in range(self.page_amount):
+            page_num = j
+            try:
+                res = urllib.urlopen(self.base_url+'?p='+ (str)(page_num) + "&check_page=" + (str)(page_num))
+                yield res
+            except IOError:
+                yield None
+        
+
+
 if __name__ == "__main__":
-    my_data01 = data01_crawler()	
-    my_data01.read_website_list()
-    print "There will be %d website to crawl"%len(my_data01.p2p_name)
-    print "start crawling"
-    my_data01.get_data_p2p()
-    #print my_data01.data  #TODO:TEST
+   # my_data01 = data01_crawler()	
+   # my_data01.read_website_list()
+   # print "There will be %d website to crawl"%len(my_data01.p2p_name)
+   # print "start crawling"
+   # my_data01.get_data_p2p()
+    my_url = p2p_list()
+    my_url.get_p2p_list()
+
+    
