@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 14:30:30 2016
+# Last Modified : Sat Mar 26 14:34:01 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -60,7 +60,7 @@ class data01_crawler():
      
     def __init__(self):
         try:
-            self.website_list = open('base')
+            self.website_list = open('base_list')
         except IOError:
             print "Please provide the p2p websites you want to crawled."
             del self
@@ -234,7 +234,7 @@ class p2p_list():
     """
     this magic_num is the page amount, now is 41
     """
-    page_amount = 2
+    page_amount = 3
     def __init__(self):
         try:
             self.output = open('./base_list','w+')
@@ -250,10 +250,10 @@ class p2p_list():
                 #print page      #TODO:TEST
                 for j in re.finditer(r'(<a\sstyle="color:\sblack;"\shref="\/p2p\/website\/)(.+)(">)(.+)(</a>)',page): 
                     self.output.write(j.group(4))
-                    print j.group(4)  #TODO:TEST
+#                    print j.group(4)  #TODO:TEST
                     self.output.write('   ')
                     single_url = re.sub(r'platform-details','http://data.01caijing.com/p2p/website/index',j.group(2))
-                    print single_url  #TODO:TEST
+#                    print single_url  #TODO:TEST
                     self.output.write(single_url + '\n')
             else:
                 pass
@@ -270,12 +270,12 @@ class p2p_list():
 
 
 if __name__ == "__main__":
-   # my_data01 = data01_crawler()	
-   # my_data01.read_website_list()
    # print "There will be %d website to crawl"%len(my_data01.p2p_name)
    # print "start crawling"
    # my_data01.get_data_p2p()
     my_url = p2p_list()
     my_url.get_p2p_list()
-
-    
+    my_data01 = data01_crawler()	
+    my_data01.read_website_list()
+    my_data01.get_data_p2p()
+   
