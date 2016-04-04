@@ -1,12 +1,22 @@
+##目标：
+爬取零壹数据平台上所有的 P2P 信贷站数据记录
+
 ##爬取地址
-####成交指标：http://data.01caijing.com/p2p/website/index-data.json?website=www.my089.com&groupBy=day
-####利率指标：http://data.01caijing.com/p2p/website/interest-data.json?website=www.my089.com&groupBy=month
-####期限指标：http://data.01caijing.com/p2p/website/period-data.json?website=www.my089.com
-####借款人数量：http://data.01caijing.com/p2p/borindex.json?website=www.my089.com
-####人均借款额：http://data.01caijing.com/p2p/borrower/avg-data.json?website=www.my089.com
-####投资人数量：http://data.01caijing.com/p2p/investor/index-data.json?website=www.my089.com
-####人均投资额：http://data.01caijing.com/p2p/investor/avg-data.json?website=www.my089.com
-####贷款余额：http://data.01caijing.com/p2p/website/balance-data.json?website=www.my089.comi
+成交指标：http://data.01caijing.com/p2p/website/index-data.json?website=www.my089.com&groupBy=day
+
+利率指标：http://data.01caijing.com/p2p/website/interest-data.json?website=www.my089.com&groupBy=month
+
+期限指标：http://data.01caijing.com/p2p/website/period-data.json?website=www.my089.com
+
+借款人数量：http://data.01caijing.com/p2p/borindex.json?website=www.my089.com
+
+人均借款额：http://data.01caijing.com/p2p/borrower/avg-data.json?website=www.my089.com
+
+投资人数量：http://data.01caijing.com/p2p/investor/index-data.json?website=www.my089.com
+
+人均投资额：http://data.01caijing.com/p2p/investor/avg-data.json?website=www.my089.com
+
+贷款余额：http://data.01caijing.com/p2p/website/balance-data.json?website=www.my089.comi
 
 
 ##说明：
