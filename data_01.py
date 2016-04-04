@@ -4,7 +4,7 @@
 # File Name : data_01.py
 # Purpose :
 # Creation Date : 25-03-2016
-# Last Modified : Sat Mar 26 15:10:23 2016
+# Last Modified : Mon Apr  4 20:18:03 2016
 # Created By : Jeasine Ma
 # ---------------------------------
 import urllib
@@ -74,8 +74,6 @@ class data01_crawler():
         """
         insert the name of the website into it
         """
-#        for i in re.finditer('[0-9,\u4e00-\u9fff]+[\s]',self.website_list):
-#            self.p2p_name.append(i)
         self.website_list = self.website_list.read()
         for i in re.finditer(r'[http][a-z,A-Z,0-9,/:.-]+',self.website_list):
             print (str)(i.group(0))  #TODO:TEST
@@ -114,24 +112,18 @@ class data01_crawler():
         for i in range(len(self.p2p_name)):
             data_kind = {}  #data_kind is a dict with key from kind_of_data and its value is json['data']
             if i != None:
-                #for j in range(1):  #TODO:TEST 
                 for j in range(len(self.kind_of_data_url)): 
                     print self.base_url + self.kind_of_data_url[j] + self.website_url[i]  #TODO:TEST 
                     try:
                         json_get = urllib.urlopen(self.base_url + self.kind_of_data_url[j] + self.website_url[i]+"&groupBy=day")
                         json_get = json.load(json_get)
-                        #print json_get['data']
-                        #json['data'] is a list(day) of list([time,data1,data2,......])
                         data_kind[self.kind_of_data[j]] = json_get['data']
-                        #data_p2p[self.p2p_name[i]] = data_kind  BUGS
                     except IOError:
                         data_kind[kind_of_data[j]] = []
-                        #data_p2p[self.p2p_name[i]] = {}  BUGS
                 data_p2p[self.p2p_name[i]] = data_kind
             else:
                 data_p2p[self.p2p_name[i]] = {}
             self.data2csv(data_p2p[self.p2p_name[i]], self.p2p_name[i])
-        #self.data = data_p2p
 
     def time2day(self, *args, **kwargs):
         """
@@ -175,8 +167,6 @@ class data01_crawler():
         else:
             data_is_good = 0
             
-        #for i in range(len(self.data)): #all the p2p
-            #print self.p2p_name[i]  #TODO:TEST
         try:
             if data_is_good:
                 self.output = open("./result/"+(str)(data_p2p_name)[:-1]+'.csv','w+')
@@ -193,13 +183,11 @@ class data01_crawler():
             for j in range(len(self.kind_of_data)):
                 if data_p2p[self.kind_of_data[j]] != []:
                     time_length = len(data_p2p[self.kind_of_data[j]])
-                    #print time_length   #TODO:TEST
                     #get all the timestamp
                     if time_length > time_length_max:
                         time_timestamp = []
                         for k in range(time_length):
                             time_timestamp.append(data_p2p[self.kind_of_data[j]][k][0])
-                        #print time_timestamp   #TODO:TEST
                         time_length_max = time_length
                         
 
@@ -228,16 +216,6 @@ class data01_crawler():
             self.output.close()
         except IOError:
             print (str)(data_p2p_name)+"data saving failure"
-                
-"""
-TODO:
-    1.不能认为kind_data的所有数据的起始时间是相同的.......   FIXED
-    2.现在的逻辑默认时间是连续的
-    3.excel不支持csv直接分页.....
-    4.目前仍对网页列表有要求（必须为index-...）实际上只需要网站id即可
-    5.目前为得到整张数据表后再一次性写入，应加以修改 FIXED
-"""
-
 
 class p2p_list():
     
@@ -258,7 +236,6 @@ class p2p_list():
         for i in self.interator_get_p2p():
             if i:
                 page = i.read()
-                #print page      #TODO:TEST
                 for j in re.finditer(r'(<a\sstyle="color:\sblack;"\shref="\/p2p\/website\/)(.+)(">)(.+)(</a>)',page): 
                     self.output.write(j.group(4))
                     print j.group(4)  #TODO:TEST

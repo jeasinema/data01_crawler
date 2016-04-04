@@ -44,13 +44,17 @@ index里面能获得信贷站的主页域名，添加至post_usl里面即可
 3.	返回的response即为新的页面
 4.	总页数可以在首页获得
 
-##脚本使用方法（Windows下）：
+##使用方法
+
+Windows:
 	
-	MKDIR result
+	MKDIR result result_not_good
 	python data_01.py
 
-视网络情况等待约7分钟左右即可完成爬取
-爬取结果输出于.\result目录下
+Linux/OS X
+	
+	mkdir result result_not_good
+	python data01.py
 
 ###可能遇到的问题：
 
@@ -59,15 +63,3 @@ index里面能获得信贷站的主页域名，添加至post_usl里面即可
 
 2.看不到包含所有信贷站的excel
 ->请等待后续版本
-
-##版本更新：
-
-20160326~v0.1  
-	-	给定页面爬取
-	-	时间戳对应
-	-	空数据标记
-	-	csv导出
-
-TODO：
-	-	自动爬取所有的p2p站点
-	-	完成一次爬取即写一次文件
