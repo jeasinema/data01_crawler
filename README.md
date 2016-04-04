@@ -1,7 +1,7 @@
 ##目标：
 爬取零壹数据平台上所有的 P2P 信贷站数据记录
 
-##爬取地址
+##爬取地址：
 成交指标：http://data.01caijing.com/p2p/website/index-data.json?website=www.my089.com&groupBy=day
 
 利率指标：http://data.01caijing.com/p2p/website/interest-data.json?website=www.my089.com&groupBy=month
@@ -20,14 +20,21 @@
 
 
 ##说明：
+
 1.返回json
+
 2.无需cookie,token
+
 3.按月与按天直接&groupBy=day/month即可
+
 4.不同基金平台的区别在于website-key
 
 ##json时间戳：
+
 1.magic_day：2015-3-25  1427241600000
+
 2.magic_month：2015-9 1441065600000
+
 3.递增即可：24*3600*1000 为一天的时间,30*24*3600*1000为一月的时间
 
 ##各信贷站的url：
